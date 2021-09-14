@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }} | {{ product.category.name }}{% endblock %}
+
+{% block body %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <h1 class="title">{{ product.name }}</h1>
+            <h2 class="subtitle">{{ product.category.name }}</h2>
+        </div>
+    </section>
+
+    <section class="section">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+            <ul>
+                <li><a href="{{ path('homepage') }}">Homepage</a></li>
+                <li><a href="{{ path('category', { id: product.category.id }) }}">{{ product.category.name }}</a></li>
+                <li class="is-active"><a href="#" aria-current="page">{{ product.name }}</a></li>
+            </ul>
+        </nav>
+
+        <div class="box columns">
+            <div class="column is-one-third">
+                <figure class="image is-4by3">
+                    <img src="{{ product.imageUrl }}" alt="{{ product.name }}">
+                </figure>
+            </div>
+            <div class="column is-two-thirds">
+                <div class="is-flex is-justify-content-space-between is-align-items-baseline">
+                    <p class="title">{{ product.name }}</p>
+                    <div class="tags are-large">
+                        <span class="tag is-primary is-rounded">
+                            {{ (product.price / 100)|format_currency('EUR') }}
+                        </span>
+                        {% if product.inSale %}
+                            <span class="tag is-warning is-rounded">PROMO</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="content">
+                    {{ product.details|nl2br }}
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

@@ -1,0 +1,27 @@
+<div class="card product">
+    <div class="card-image">
+        <figure class="image is-4by3">
+            <a href="{{ path('product', { id: product.id } ) }}">
+                <img src="{{ product.imageUrl }}" alt="{{ product.name }}">
+            </a>
+        </figure>
+    </div>
+    <div class="card-content">
+        <div class="media">
+            <div class="media-content">
+                <p class="title is-4">
+                    <a href="{{ path('product', { id: product.id } ) }}">{{ product.name }}</a>
+                </p>
+
+                <div class="tags are-large is-pulled-right">
+                    <span class="tag is-primary is-rounded">
+                        {{ (product.price / 100)|format_currency('EUR') }}
+                    </span>
+                    {% if product.inSale %}
+                        <span class="tag is-warning is-rounded">PROMO</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

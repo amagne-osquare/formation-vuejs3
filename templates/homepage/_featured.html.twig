@@ -1,0 +1,11 @@
+{% if products|length > 0 %}
+    <h3 class="is-size-3">Produits à la une</h3>
+{% endif %}
+
+<div class="columns products is-multiline">
+    {% for product in products %}
+        <div class="column is-one-quarter">
+            {{ include('category/_product.html.twig', { product: product }) }}
+        </div>
+    {% endfor %}
+</div>

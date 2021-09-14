@@ -1,37 +1,41 @@
-# Symfony Docker
+# Formation Vue.js 3 [01-start]
 
-A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework, with full [HTTP/2](https://symfony.com/doc/current/weblink.html), HTTP/3 and HTTPS support.
+## Contexte
 
-![CI](https://github.com/dunglas/symfony-docker/workflows/CI/badge.svg)
+Nous partons d'un projet **Symfony** "classique" utilisant des templates en **Twig**.
 
-## Getting Started
+## Objectif
 
-1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/)
-2. Run `docker-compose build --pull --no-cache` to build fresh images
-3. Run `docker-compose up` (the logs will be displayed in the current shell)
-4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
+Nous allons ajouter des parties dynamiques utilisant **Vue.js** dans nos templates Twig pour faire 
+connaissance avec la lib.
 
-## Features
+## Pré-requis
 
-* Production, development and CI ready
-* Automatic HTTPS (in dev and in prod!)
-* HTTP/2, HTTP/3 and [Preload](https://symfony.com/doc/current/web_link.html) support
-* Built-in [Mercure](https://symfony.com/doc/current/mercure.html) hub
-* [Vulcain](https://vulcain.rocks) support
-* Just 2 services (PHP FPM and Caddy server)
-* Super-readable configuration
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- **Stopper tous les conteneurs docker** éventuels qui pourraient être lancés en dehors de ce 
+  projet pour éviter les conflits de port. La commande `docker ps` doit retourner une liste vide
+- Ce projet utilise **PHP 8.0**, n'oubliez pas de configurer l'interpreteur PHP de votre IDE pour 
+  une meilleure reconnaissance
 
-**Enjoy!**
+## Lancement du projet
 
-## Docs
+```sh
+$ docker-compose up --build -d
+``` 
 
-1. [Build options](docs/build.md)
-2. [Using Symfony Docker with an existing project](docs/existing-project.md)
-3. [Support for extra services](docs/extra-services.md)
-4. [Deploying in production](docs/production.md)
-5. [Installing Xdebug](docs/xdebug.md)
-6. [Troubleshooting](docs/troubleshooting.md)
+Il est possible de consulter les **logs** :
+```shell
+$ docker-compose logs -f
+```
 
-## Credits
+La commande `docker ps` devrait retourner les deux conteneurs docker :
+- **php** : contient le code php de l'application, le service php-fpm
+- **caddy** : reverse proxy 
+- **database** : la base de données
+- **mailer** : le catcher de mails
 
-Created by [Kévin Dunglas](https://dunglas.fr), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+Il suffit ensuite d'ouvrir la page `https://localhost` dans le navigateur web et d'[accepter le 
+certificat TLS auto-généré](https://stackoverflow.com/a/15076602/1352334).
+
+***
+Ce projet support utilise le template [Symfony Docker de Kévin Dunglas](https://github.com/dunglas/symfony-docker).
