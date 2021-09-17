@@ -37,6 +37,7 @@
                         {% endif %}
                     </div>
                 </div>
+
                 {% if product.variants|length > 0 %}
                     <div class="select is-rounded is-medium is-warning">
                         <select name="variant">
@@ -47,6 +48,17 @@
                         </select>
                     </div>
                 {% endif %}
+
+                {% verbatim %}
+                <div id="qty" class="is-flex is-align-items-baseline">
+                    <p >Quantité : {{ qty }}</p>
+                    <div class="buttons ml-2">
+                        <button class="button is-danger" @click="qty--">-</button>
+                        <button class="button is-success" @click="qty++">+</button>
+                    </div>
+                    <p class="has-text-weight-bold ml-2">Total : {{ total }} €</p>
+                </div>
+                {% endverbatim %}
 
                 <div class="content mt-6">
                     <p class="subtitle is-4">Détails</p>
@@ -72,6 +84,18 @@
             </div>
         </div>
     </section>
+    <script>
+        let app = Vue.createApp({
+            data: () => ({ qty: 0, price: {{ product.price }} }),
+            computed: {
+                total() {
+                    return Math.round(this.qty * this.price) / 100;
+                },
+            },
+        }).mount('#qty');
+    </script>
+{% endblock %}
 
-
+{% block javascripts %}
+    <script src="https://unpkg.com/vue@next"></script>
 {% endblock %}
