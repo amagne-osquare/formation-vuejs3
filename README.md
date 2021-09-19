@@ -1,4 +1,4 @@
-# Formation Vue.js 3 [01-start]
+# Formation Vue.js 3 [step-00]
 
 ## Contexte
 
