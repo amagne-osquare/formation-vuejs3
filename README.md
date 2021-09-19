@@ -10,4 +10,4 @@ Nous allons partir à la découverte de la lib en créant nos propres composants
 
 ## Pré-requis
 
-- Lancer le serveur de développement avec rechargement à chaud : `npm run dev` 
+- Lancer le serveur de développement avec rechargement à chaud : `npm run dev`
