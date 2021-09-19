@@ -1,59 +1,37 @@
-# Formation Vue.js 3 [step-00]
+# Formation Vue.js 3 [step-01]
 
 ## Contexte
 
-Nous partons d'un projet **Symfony** "classique" utilisant des templates en **Twig**.
+Nous avons ajouter un morceau de **Vue.js** dans notre template Twig pour découvrir son 
+fonctionnement basique.
 
 ## Objectif
 
-Nous allons ajouter des parties dynamiques utilisant **Vue.js** dans nos templates Twig pour faire 
-connaissance avec la lib.
+Nous allons maintenant laisser de coté temporairement notre application Symfony et créer une 
+application Vue.js indépendante pour approfondir notre connaissance de la lib.
 
 ## Pré-requis
 
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- **Stopper tous les conteneurs docker** éventuels qui pourraient être lancés en dehors de ce 
-  projet pour éviter les conflits de port. La commande `docker ps` doit retourner une liste vide
-- Ce projet utilise **PHP 8.0**, n'oubliez pas de configurer l'interpreteur PHP de votre IDE pour 
-  une meilleure reconnaissance
+- `npm` ou `yarn`
+- Couper le watcher npm de Symfony Encore
+- On peut couper les conteneurs Docker de la précédente étape pour le moment
 
-## Lancement du projet
+## Création de l'application Vue.js
+
+Nous utilisons l'outil Vite pour créer notre application Vue.js :
 
 ```sh
-$ docker-compose up --build -d
-``` 
-
-Il est possible de consulter les **logs** :
-```shell
-$ docker-compose logs -f
+$ npm init vite@latest vue-app -- --template vue
+$ cd vue-app/
 ```
 
-La commande `docker ps` devrait retourner les deux conteneurs docker :
-- **php** : contient le code php de l'application, le service php-fpm
-- **caddy** : reverse proxy 
-- **database** : la base de données
-- **mailer** : le catcher de mails
+Nous avons à présent une application Vue.js 3 dans `vue-app`. Installons les dépendances et 
+démarrons le serveur de développement :
 
-Pour construire les dépendances front et lancer le rechargement à chaud :
-```shell
+```sh
 $ npm install
-$ npm run watch
+$ npm run dev
 ```
 
-Enfin, on peut charger les fixtures du projet :
-```shell
-$ docker-compose exec php bin/console doctrine:fixtures:load
-```
-
-Il suffit ensuite d'ouvrir la page `https://localhost` dans le navigateur web et d'[accepter le
-certificat TLS auto-généré](https://stackoverflow.com/a/15076602/1352334).
-
-Pour ajouter le certificat root de caddy et lever cette exception :
-```shell
-$ docker cp formation-vuejs3_caddy_1:/data/caddy/pki/authorities/local/root.crt ~/caddy-root.crt
-```
-
-Puis ajouter le certificat (autorité) dans le navigateur web, et relancer.
-
-***
-Ce projet support utilise le template [Symfony Docker de Kévin Dunglas](https://github.com/dunglas/symfony-docker).
+La config de Vite et de ses plugins se trouve dans le fichier `vite.config.js`.  
+L'application se trouve sur http://localhost:3000/
