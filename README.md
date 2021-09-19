@@ -14,7 +14,7 @@ application Vue.js indépendante pour approfondir notre connaissance de la lib.
 
 - `npm` ou `yarn`
 - Couper le watcher npm de Symfony Encore
-- On peut couper les conteneurs Docker de la précédente étape pour le moment
+- On peut couper les conteneurs Docker de la précédente étape pour le moment (`docker-compose stop`)
 
 ## Création de l'application Vue.js
 
@@ -34,4 +34,4 @@ $ npm run dev
 ```
 
 La config de Vite et de ses plugins se trouve dans le fichier `vite.config.js`.  
-L'application se trouve sur http://localhost:3000/
+L'application se trouve sur [http://localhost:3000/](http://localhost:3000/).
