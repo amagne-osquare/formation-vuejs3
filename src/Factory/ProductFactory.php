@@ -31,7 +31,7 @@ final class ProductFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'name' => self::faker()->name(),
+            'name' => self::faker()->word(),
             'price' => self::faker()->numberBetween(100, 99999),
             'details' => self::faker()->paragraphs(5, true),
             'imageUrl' => self::faker()->imageUrl(),

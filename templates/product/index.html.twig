@@ -37,9 +37,38 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="content">
+                {% if product.variants|length > 0 %}
+                    <div class="select is-rounded is-medium is-warning">
+                        <select name="variant">
+                            <option>Couleur...</option>
+                            {% for variant in product.variants %}
+                                <option value="{{ variant.id }}">{{ variant.value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
+
+                <div class="content mt-6">
+                    <p class="subtitle is-4">Détails</p>
                     {{ product.details|nl2br }}
                 </div>
+                {% if product.comments|length > 0 %}
+                    <h3 class="subtitle is-4">Commentaires</h3>
+                    <ul>
+                        {% for comment in product.comments %}
+                            <article class="message is-dark">
+                                <div class="message-header is-flex">
+                                    <p>{{ comment.date|date("j F Y à H:i") }}, par {{ comment
+                                        .author }}</p>
+                                    <p>({{ comment.note }}/5)</p>
+                                </div>
+                                <div class="message-body">
+                                    {{ comment.comment }}
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
         </div>
     </section>
