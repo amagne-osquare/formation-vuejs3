@@ -19,7 +19,7 @@
             </ul>
         </nav>
 
-        <div class="box columns">
+        <div class="box columns" id="product">
             <div class="column is-one-third">
                 <figure class="image is-4by3">
                     <img src="{{ product.imageUrl }}" alt="{{ product.name }}">
@@ -38,34 +38,49 @@
                     </div>
                 </div>
 
-                {% if product.variants|length > 0 %}
-                    <div class="select is-rounded is-medium is-warning">
-                        <select name="variant">
-                            <option>Couleur...</option>
-                            {% for variant in product.variants %}
-                                <option value="{{ variant.id }}">{{ variant.value }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                {% endif %}
+                <div class="is-flex is-justify-content-space-between is-align-items-baseline">
+                    {% if product.variants|length > 0 %}
+                        <div class="select is-rounded is-medium is-warning">
+                            {% verbatim %}<select name="variant" @change="setVariant($event.target.value)">{% endverbatim %}
+                                <option>Couleur...</option>
+                                {% for variant in product.variants %}
+                                    <option value="{{ variant.id }}">{{ variant.value }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
 
-                {% verbatim %}
-                <div id="qty" class="is-flex is-align-items-baseline">
-                    <p >Quantité : {{ qty }}</p>
-                    <div class="buttons ml-2">
-                        <button class="button is-danger" @click="qty--">-</button>
-                        <button class="button is-success" @click="qty++">+</button>
+                    {% verbatim %}
+                    <div class="is-flex is-align-items-baseline">
+                        <p >Quantité : {{ qty }}</p>
+                        <div class="buttons ml-2">
+                            <button class="button is-danger" @click="decreaseQty">-</button>
+                            <button class="button is-success" @click="increaseQty">+</button>
+                        </div>
+                        <p class="has-text-weight-bold ml-2">Total : {{ total }} €</p>
                     </div>
-                    <p class="has-text-weight-bold ml-2">Total : {{ total }} €</p>
+                    {% endverbatim %}
                 </div>
-                {% endverbatim %}
 
-                <div class="content mt-6">
-                    <p class="subtitle is-4">Détails</p>
-                    {{ product.details|nl2br }}
+                <div class="tabs is-boxed is-medium">
+                    {% verbatim %}
+                    <ul>
+                        <li
+                         :class="{ 'is-active': 'details' === activeTab }"
+                         @click="activeTab = 'details'"
+                        ><a>Détails</a></li>
+                        <li
+                          v-if="0 < nbComments"
+                          :class="{ 'is-active': 'comments' === activeTab }"
+                          @click="activeTab = 'comments'"
+                        ><a>Commentaires</a></li>
+                    </ul>
+                    {% endverbatim %}
                 </div>
-                {% if product.comments|length > 0 %}
-                    <h3 class="subtitle is-4">Commentaires</h3>
+                {% verbatim %}<div class="content" v-if="'details' === activeTab">{% endverbatim %}
+                  {{ product.details|nl2br }}
+                </div>
+                {% verbatim %}<div class="content" v-else-if="0 < nbComments">{% endverbatim %}
                     <ul>
                         {% for comment in product.comments %}
                             <article class="message is-dark">
@@ -80,19 +95,46 @@
                             </article>
                         {% endfor %}
                     </ul>
+                </div>
+                {% if product.comments|length > 0 %}
                 {% endif %}
             </div>
         </div>
     </section>
     <script>
         let app = Vue.createApp({
-            data: () => ({ qty: 0, price: {{ product.price }} }),
+            data: () => ({
+                activeTab: 'details',
+                maxQty: 0,
+                nbComments: {{ product.comments|length }},
+                price: {{ product.price }},
+                qty: 0,
+                variant: null,
+            }),
             computed: {
                 total() {
                     return Math.round(this.qty * this.price) / 100;
                 },
             },
-        }).mount('#qty');
+            methods: {
+                setVariant(value) {
+                    this.variant = value;
+                },
+                decreaseQty() {
+                    if (0 < this.qty) {
+                        this.qty--;
+                    }
+                },
+                increaseQty() {
+                    this.qty++;
+                },
+            },
+            watch: {
+                variant(newValue, oldValue) {
+                    this.qty = 0;
+                },
+            },
+        }).mount('#product');
     </script>
 {% endblock %}
 
