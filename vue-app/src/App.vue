@@ -14,14 +14,14 @@
     <div id="navMenu" class="navbar-menu">
       <div class="navbar-start">
         <a class="navbar-item" href="/">Accueil</a>
-        <a
+        <router-link
           v-for="category in categories"
           :key="category['@id']"
           class="navbar-item"
-          href="#"
+          :to="{ path: category['@id'] }"
         >
           {{ category.name }}
-        </a>
+        </router-link>
       </div>
 
       <div class="navbar-end">
@@ -35,17 +35,13 @@
     </div>
   </nav>
 
-  <Home />
+  <router-view></router-view>
 </template>
 
 <script>
 import { axiosInstance } from '@/api/axios';
-import Home from '@/views/Home.vue';
 
 export default {
-  components: {
-    Home,
-  },
   data() {
     return {
       categories: [],
