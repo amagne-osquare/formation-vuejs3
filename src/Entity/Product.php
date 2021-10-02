@@ -2,13 +2,23 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ApiResource(
+    collectionOperations: ['GET'],
+    itemOperations: ['GET'],
+    normalizationContext: ['groups' => ['product:get']],
+)]
+#[ApiFilter(BooleanFilter::class, properties: ['featured'])]
 class Product
 {
     #[ORM\Id, ORM\GeneratedValue]
@@ -16,18 +26,22 @@ class Product
     private ?int $id;
 
     #[ORM\Column]
+    #[Groups('product:get')]
     private ?string $name;
 
     #[ORM\Column(type: Types::INTEGER)]
+    #[Groups('product:get')]
     private ?int $price;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $details = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups('product:get')]
     private ?string $imageUrl = null;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    #[Groups('product:get')]
     private bool $inSale = false;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
@@ -35,9 +49,11 @@ class Product
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('product:get')]
     private Category $category;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductVariant::class, orphanRemoval: true)]
+    #[Groups('product:get')]
     private Collection $variants;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductComment::class, orphanRemoval: true)]
@@ -125,11 +141,11 @@ class Product
     }
 
     /**
-     * @return Collection|ProductVariant[]
+     * @return ProductVariant[]
      */
-    public function getVariants(): Collection
+    public function getVariants(): array
     {
-        return $this->variants;
+        return $this->variants->toArray();
     }
 
     public function addVariant(ProductVariant $variant): void

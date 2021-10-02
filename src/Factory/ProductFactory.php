@@ -34,7 +34,7 @@ final class ProductFactory extends ModelFactory
             'name' => self::faker()->word(),
             'price' => self::faker()->numberBetween(100, 99999),
             'details' => self::faker()->paragraphs(5, true),
-            'imageUrl' => self::faker()->imageUrl(),
+            'imageUrl' => sprintf('https://picsum.photos/seed/%s/800/600', self::faker()->word()),
             'category' => CategoryFactory::random(),
             'inSale' => self::faker()->boolean(70),
             'featured' => self::faker()->boolean(30),

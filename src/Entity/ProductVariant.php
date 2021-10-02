@@ -2,10 +2,17 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductVariantRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductVariantRepository::class)]
+#[ApiResource(
+    collectionOperations: ['GET'],
+    itemOperations: ['GET'],
+    normalizationContext: ['groups' => ['product:get']],
+)]
 class ProductVariant
 {
     #[ORM\Id]
@@ -18,6 +25,7 @@ class ProductVariant
     private Product $product;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups('product:get')]
     private string $value;
 
     #[ORM\Column(type: 'smallint', options: ['default' => 0])]
