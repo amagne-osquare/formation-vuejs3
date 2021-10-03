@@ -20,31 +20,15 @@
   </div>
 </template>
 
-<script>
-import { axiosInstance } from '@/api/axios';
+<script setup>
+import { toRef } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import ProductItem from '@/components/ProductItem.vue';
+import { useFetcher } from '@/composables/useFetcher';
 
-export default {
-  components: {
-    Breadcrumbs,
-    ProductItem,
-  },
-  data() {
-    return {
-      category: null,
-    };
-  },
-  props: {
-    '@id': { type: String, required: true },
-  },
-  watch: {
-    '@id': {
-      async handler() {
-        this.category = await axiosInstance.get(this['@id']);
-      },
-      immediate: true,
-    },
-  },
-}
+const props = defineProps({
+  '@id': { type: String, required: true },
+});
+
+const category = useFetcher(toRef(props, '@id'));
 </script>

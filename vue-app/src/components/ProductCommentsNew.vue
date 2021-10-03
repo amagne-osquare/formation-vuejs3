@@ -39,38 +39,37 @@
   </form>
 </template>
 
-<script>
+<script setup>
 import { axiosInstance } from '@/api/axios';
+import { ref, reactive } from 'vue';
 
-export default {
-  data() {
-    return {
-      comment: { comment: '', note: 5, author: '', product: this.product['@id'] },
-      error: null,
-    };
-  },
-  props: {
-    product: { type: Object, required: true },
-  },
-  methods: {
-    async submit() {
-      this.error = '';
-      if (!this.comment.author || !this.comment.comment) {
-        this.error = 'Merci de remplir tous les champs';
-        return;
-      }
+const props = defineProps({
+  product: { type: Object, required: true },
+});
 
-      try {
-        await axiosInstance.post('/product_comments', this.comment);
-        this.$emit('hide');
-      } catch (e) {
-        this.error = e;
-      }
-    },
-    cancel() {
-      this.comment = { comment: '', note: 5, author: '', product: this.product['@id'] };
-      this.$emit('hide');
-    }
+const emits = defineEmits(['hide']);
+
+const emptyComment = { comment: '', note: 5, author: '', product: props.product['@id'] };
+let comment = reactive(emptyComment);
+const error = ref(null);
+
+const submit = async () => {
+  error.value = '';
+  if (!comment.author || !comment.comment) {
+    error.value = 'Merci de remplir tous les champs';
+    return;
   }
+
+  try {
+    await axiosInstance.post('/product_comments', comment);
+    emits('hide');
+  } catch (e) {
+    error.value = e;
+  }
+};
+
+const cancel = () => {
+  comment = emptyComment;
+  emits('hide');
 };
 </script>

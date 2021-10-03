@@ -43,13 +43,10 @@
   </div>
 </template>
 
-<script>
-import ProductMixin from '@/mixins/ProductMixin';
+<script setup>
+import { format } from '@/composables/useFormatPrice';
 
-export default {
-  props: {
-    product: { type: Object, required: true },
-  },
-  mixins: [ProductMixin],
-}
+defineProps({
+  product: { type: Object, required: true },
+});
 </script>

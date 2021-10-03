@@ -31,36 +31,22 @@
   </section>
 </template>
 
-<script>
+<script setup>
+import { computed, onMounted, ref } from 'vue';
 import { axiosInstance } from '@/api/axios';
 import ProductItem from '@/components/ProductItem.vue';
 
-export default {
-  components: {
-    ProductItem,
-  },
-  data() {
-    return {
-      featured: [],
-      imageUrl: 'https://picsum.photos/id/191/2246/749',
-      isFilteredInSale: false,
-      title: 'Bienvenue !',
-    };
-  },
-  async created() {
-    const res = await axiosInstance.get('/products?featured=true');
-    this.featured = res['hydra:member'];
-  },
-  computed: {
-    filteredProducts() {
-      if (!this.isFilteredInSale) {
-        return this.featured;
-      }
+const featured = ref([]);
+const imageUrl = 'https://picsum.photos/id/191/2246/749';
+const title = 'Bienvenue !';
+const isFilteredInSale = ref(false);
 
-      return this.featured.filter((product) => product.inSale);
-    }
-  },
-}
+onMounted(async () => {
+  const res = await axiosInstance.get('/products?featured=true');
+  featured.value = res['hydra:member'];
+});
+
+const filteredProducts = computed(() => !isFilteredInSale.value ? featured.value : featured.value.filter((product) => product.inSale));
 </script>
 
 <style lang="scss">

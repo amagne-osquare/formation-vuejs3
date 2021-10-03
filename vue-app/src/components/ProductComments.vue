@@ -26,20 +26,13 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import ProductCommentsNew from '@/components/ProductCommentsNew.vue';
 
-export default {
-  components: {
-    ProductCommentsNew,
-  },
-  props: {
-    product: { type: Object, required: true },
-  },
-  data() {
-    return {
-      showForm: true,
-    };
-  },
-}
+defineProps({
+  product: { type: Object, required: true },
+});
+
+const showForm = ref(true);
 </script>

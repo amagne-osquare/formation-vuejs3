@@ -58,51 +58,30 @@
   </section>
 </template>
 
-<script>
-import { axiosInstance } from '@/api/axios';
+<script setup>
+import { ref, computed, toRef, shallowRef } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import ProductMixin from '@/mixins/ProductMixin';
 import ProductComments from '@/components/ProductComments.vue';
 import ProductDetails from '@/components/ProductDetails.vue';
 import ProductQuantity from '@/components/ProductQuantity.vue';
 import ProductVariants from '@/components/ProductVariants.vue';
+import { format } from '@/composables/useFormatPrice';
+import { useFetcher } from '@/composables/useFetcher';
 
-export default {
-  data() {
-    return {
-      activeTab: 'product-details',
-      product: null,
-      qtyMax: 0,
-    };
-  },
-  props: {
-    '@id': { type: String, required: true },
-  },
-  components: {
-    Breadcrumbs,
-    ProductComments,
-    ProductDetails,
-    ProductQuantity,
-    ProductVariants,
-  },
-  mixins: [ProductMixin],
-  computed: {
-    tabs() {
-      const tabs = [{ label: 'Détails', component: 'product-details' }];
-      if (0 < this.product.comments.length) {
-        tabs.push({ label: 'Commentaires', component: 'product-comments' });
-      }
+const props = defineProps({
+  '@id': { type: String, required: true },
+});
 
-      return tabs;
-    },
-  },
-  watch: {
-    '@id': {
-      async handler() {
-        this.product = await axiosInstance.get(this['@id']);
-      },
-      immediate: true,
-    },
-  },
-}
+const activeTab = shallowRef(ProductDetails);
+const qtyMax = ref(0);
+const product = useFetcher(toRef(props, '@id'));
+
+const tabs = computed(() => {
+  const tabs = [{ label: 'Détails', component: ProductDetails }];
+  if (0 < product.value.comments.length) {
+    tabs.push({ label: 'Commentaires', component: ProductComments });
+  }
+
+  return tabs;
+});
 </script>

@@ -1,16 +1,9 @@
-<script>
-import { h } from 'vue';
+<template>
+  <div>{{ product.details }}</div>
+</template>
 
-export default {
-  props: {
-    product: { type: Object, required: true },
-  },
-  render() {
-    return h(
-      'div',
-      {},
-      this.$props.product.details,
-    )
-  },
-}
+<script setup>
+defineProps({
+  product: { type: Object, required: true },
+});
 </script>

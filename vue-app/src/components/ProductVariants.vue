@@ -3,7 +3,7 @@
     <select name="variant" @change="setVariant($event.target.value)">
       <option>Couleur...</option>
       <option
-        v-for="variant in variants"
+        v-for="variant in product.variants"
         :key="variant"
         :value="variant['@id']"
       >{{ variant.value }}</option>
@@ -11,25 +11,18 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 
-export default {
-  props: {
-    product: { type: Object, required: true },
-  },
-  setup(props, { emit }) {
-    const variant = ref();
+const props = defineProps({
+  product: { type: Object, required: true },
+});
 
-    const setVariant = (value) => {
-      variant.value = value;
-      emit('setQtyMax', props.product.variants.find((el) => el['@id'] === value).qtyInStock);
-    }
+const emit = defineEmits(['setQtyMax']);
+const variant = ref();
 
-    return {
-      setVariant,
-      variants: props.product.variants,
-    };
-  }
+const setVariant = (value) => {
+  variant.value = value;
+  emit('setQtyMax', props.product.variants.find((el) => el['@id'] === value).qtyInStock);
 }
 </script>

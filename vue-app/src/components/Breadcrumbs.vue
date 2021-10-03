@@ -10,11 +10,9 @@
   </nav>
 </template>
 
-<script>
-export default {
-  props: {
-    parent: { type: Object },
-    current: { type: String, required: true },
-  },
-}
+<script setup>
+defineProps({
+  parent: { type: Object },
+  current: { type: String, required: true },
+});
 </script>
