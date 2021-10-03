@@ -2,10 +2,17 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductCommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductCommentRepository::class)]
+#[ApiResource(
+    collectionOperations: ['GET'],
+    itemOperations: ['GET'],
+    normalizationContext: ['groups' => ['product:get']],
+)]
 class ProductComment
 {
     #[ORM\Id]
@@ -18,15 +25,19 @@ class ProductComment
     private Product $product;
 
     #[ORM\Column(length: 255)]
+    #[Groups('product:get')]
     private string $author;
 
     #[ORM\Column(type: 'text')]
+    #[Groups('product:get')]
     private string $comment;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups('product:get')]
     private \DateTime $date;
 
     #[ORM\Column(type: 'smallint', options: ['default' => 0])]
+    #[Groups('product:get')]
     private int $note = 0;
 
     public function getId(): ?int

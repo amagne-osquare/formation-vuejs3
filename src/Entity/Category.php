@@ -23,7 +23,7 @@ class Category
     private ?int $id;
 
     #[ORM\Column]
-    #[Groups('category:get')]
+    #[Groups(['category:get', 'product:get'])]
     private string $name;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class)]

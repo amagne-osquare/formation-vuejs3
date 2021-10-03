@@ -58,6 +58,7 @@ class Product
     private Collection $variants;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductComment::class, orphanRemoval: true)]
+    #[Groups('product:get')]
     private Collection $comments;
 
     public function __construct()
