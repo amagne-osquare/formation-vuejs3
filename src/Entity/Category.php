@@ -27,7 +27,12 @@ class Category
     private string $name;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class)]
+    #[Groups('category:get')]
     private Collection $products;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups('category:get')]
+    private ?string $description;
 
     public function __construct()
     {
@@ -47,6 +52,16 @@ class Category
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
     }
 
     /**

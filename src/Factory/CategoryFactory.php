@@ -32,6 +32,7 @@ final class CategoryFactory extends ModelFactory
     {
         return [
             'name' => ucfirst(self::faker()->words(2, true)),
+            'description' => self::faker()->realText(),
         ];
     }
 

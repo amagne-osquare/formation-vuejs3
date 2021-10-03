@@ -26,22 +26,23 @@ class Product
     private ?int $id;
 
     #[ORM\Column]
-    #[Groups('product:get')]
+    #[Groups(['product:get', 'category:get'])]
     private ?string $name;
 
     #[ORM\Column(type: Types::INTEGER)]
-    #[Groups('product:get')]
+    #[Groups(['product:get', 'category:get'])]
     private ?int $price;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['product:get'])]
     private ?string $details = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups('product:get')]
+    #[Groups(['product:get', 'category:get'])]
     private ?string $imageUrl = null;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
-    #[Groups('product:get')]
+    #[Groups(['product:get', 'category:get'])]
     private bool $inSale = false;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
@@ -53,7 +54,7 @@ class Product
     private Category $category;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductVariant::class, orphanRemoval: true)]
-    #[Groups('product:get')]
+    #[Groups(['product:get', 'category:get'])]
     private Collection $variants;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductComment::class, orphanRemoval: true)]

@@ -25,7 +25,7 @@ class ProductVariant
     private Product $product;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups('product:get')]
+    #[Groups(['product:get', 'category:get'])]
     private string $value;
 
     #[ORM\Column(type: 'smallint', options: ['default' => 0])]
