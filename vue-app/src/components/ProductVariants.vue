@@ -5,7 +5,7 @@
       <option
         v-for="variant in product.variants"
         :key="variant"
-        :value="variant"
+        :value="variant['@id']"
       >{{ variant.value }}</option>
     </select>
   </div>
@@ -24,6 +24,7 @@ export default {
   methods: {
     setVariant(value) {
       this.variant = value;
+      this.$emit('setQtyMax', this.product.variants.find((el) => el['@id'] === value).qtyInStock);
     }
   },
 }

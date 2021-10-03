@@ -1,5 +1,15 @@
 <template>
   <div>
+    <button class="button is-primary is-light" @click="showForm = !showForm">
+      <font-awesome-icon :icon="showForm ? 'comment-slash' : 'comment'" />
+      <span class="ml-2">{{ showForm ? 'Cacher' : 'Afficher' }} le formulaire de commentaire</span>
+    </button>
+    <product-comments-new
+      v-show="showForm"
+      :product="product"
+      @hide="showForm = false"
+    />
+    <hr />
     <article
       v-for="comment in product.comments"
       :key="comment['@id']"
@@ -17,9 +27,19 @@
 </template>
 
 <script>
+import ProductCommentsNew from '@/components/ProductCommentsNew.vue';
+
 export default {
+  components: {
+    ProductCommentsNew,
+  },
   props: {
     product: { type: Object, required: true },
+  },
+  data() {
+    return {
+      showForm: true,
+    };
   },
 }
 </script>

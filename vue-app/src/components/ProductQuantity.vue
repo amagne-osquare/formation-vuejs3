@@ -1,9 +1,9 @@
 <template>
   <div>
-    <p >Quantité : {{ qty }}</p>
+    <p >Quantité : {{ qty }} (max : {{ qtyMax }})</p>
     <div class="buttons ml-2">
-      <button class="button is-danger" @click="decreaseQty">-</button>
-      <button class="button is-success" @click="increaseQty">+</button>
+      <button class="button is-danger" :disabled="qty <= 0" @click="decreaseQty">-</button>
+      <button class="button is-success" :disabled="qty >= qtyMax" @click="increaseQty">+</button>
     </div>
     <p class="has-text-weight-bold ml-2">Total : {{ total }} €</p>
   </div>
@@ -18,6 +18,7 @@ export default {
   },
   props: {
     product: { type: Object, required: true },
+    qtyMax: { type: Number, default: 0 },
   },
   computed: {
     total() {
@@ -26,7 +27,9 @@ export default {
   },
   methods: {
     increaseQty() {
-      this.qty++;
+      if (this.qty < this.qtyMax) {
+        this.qty++;
+      }
     },
     decreaseQty() {
       if (0 < this.qty) {

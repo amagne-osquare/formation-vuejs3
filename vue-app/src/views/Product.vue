@@ -30,9 +30,15 @@
           <product-variants
             v-if="product.variants.length"
             :product="product"
-            class="select is-rounded is-medium is-warning"/>
+            class="select is-rounded is-medium is-warning"
+            @setQtyMax="qtyMax = $event"
+          />
 
-          <product-quantity class="is-flex is-align-items-baseline" :product="product" />
+          <product-quantity
+            class="is-flex is-align-items-baseline"
+            :product="product"
+            :qty-max="qtyMax"
+          />
         </div>
 
         <div class="tabs is-boxed is-medium">
@@ -44,7 +50,9 @@
             ><a>{{ tab.label }}</a></li>
           </ul>
         </div>
-        <component class="content" :is="activeTab" :product="product"/>
+        <keep-alive>
+          <component class="content" :is="activeTab" :product="product"/>
+        </keep-alive>
       </div>
     </div>
   </section>
@@ -64,6 +72,7 @@ export default {
     return {
       activeTab: 'product-details',
       product: null,
+      qtyMax: 0,
     };
   },
   props: {

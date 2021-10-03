@@ -29,6 +29,7 @@ class ProductVariant
     private string $value;
 
     #[ORM\Column(type: 'smallint', options: ['default' => 0])]
+    #[Groups('product:get')]
     private int $qtyInStock;
 
     public function getId(): ?int

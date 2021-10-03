@@ -9,8 +9,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductCommentRepository::class)]
 #[ApiResource(
-    collectionOperations: ['GET'],
+    collectionOperations: ['GET', 'POST'],
     itemOperations: ['GET'],
+    denormalizationContext: ['groups' => ['comment:post']],
     normalizationContext: ['groups' => ['product:get']],
 )]
 class ProductComment
@@ -22,14 +23,15 @@ class ProductComment
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('comment:post')]
     private Product $product;
 
     #[ORM\Column(length: 255)]
-    #[Groups('product:get')]
+    #[Groups(['product:get', 'comment:post'])]
     private string $author;
 
     #[ORM\Column(type: 'text')]
-    #[Groups('product:get')]
+    #[Groups(['product:get', 'comment:post'])]
     private string $comment;
 
     #[ORM\Column(type: 'datetime')]
@@ -37,8 +39,13 @@ class ProductComment
     private \DateTime $date;
 
     #[ORM\Column(type: 'smallint', options: ['default' => 0])]
-    #[Groups('product:get')]
+    #[Groups(['product:get', 'comment:post'])]
     private int $note = 0;
+
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+    }
 
     public function getId(): ?int
     {
