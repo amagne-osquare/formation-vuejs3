@@ -10,32 +10,27 @@
 </template>
 
 <script>
+import { ref, toRefs, computed } from 'vue';
+
 export default {
-  data() {
-    return {
-      qty: 0,
-    };
-  },
   props: {
     product: { type: Object, required: true },
     qtyMax: { type: Number, default: 0 },
   },
-  computed: {
-    total() {
-      return Math.round(this.qty * this.product.price) / 100;
-    },
-  },
-  methods: {
-    increaseQty() {
-      if (this.qty < this.qtyMax) {
-        this.qty++;
-      }
-    },
-    decreaseQty() {
-      if (0 < this.qty) {
-        this.qty--;
-      }
-    },
+  setup(props) {
+    const { product, qtyMax } = toRefs(props);
+    const qty = ref(0);
+    const total = computed(() => Math.round(qty.value * product.value.price) / 100);
+    const increaseQty = () => qty.value = qty.value < qtyMax.value ? qty.value + 1 : qty.value;
+    const decreaseQty = () => qty.value = 0 < qty.value ? qty.value - 1 : qty.value;
+
+    return {
+      decreaseQty,
+      increaseQty,
+      qty,
+      qtyMax,
+      total,
+    }
   },
 }
 </script>
