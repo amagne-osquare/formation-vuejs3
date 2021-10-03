@@ -12,12 +12,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
 
-const props = defineProps({
-  product: { type: Object, required: true },
-});
-
+const store = useStore();
+const product = computed(() => store.state.product);
 const emit = defineEmits(['setQtyMax']);
 const variant = ref();
 

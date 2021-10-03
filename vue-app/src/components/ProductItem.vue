@@ -36,7 +36,7 @@
               </div>
             </div>
           </div>
-          <button class="button is-success" :disabled="0 === product.variants.length">Voir le produit</button>
+          <button class="button is-success" :disabled="disabled">Voir le produit</button>
         </div>
       </div>
     </div>
@@ -45,8 +45,10 @@
 
 <script setup>
 import { format } from '@/composables/useFormatPrice';
+import { computed } from 'vue';
 
-defineProps({
+const props = defineProps({
   product: { type: Object, required: true },
 });
+const disabled = computed(() => 0 < props.product.variants.length);
 </script>

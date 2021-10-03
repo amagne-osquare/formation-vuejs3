@@ -21,7 +21,8 @@
 </template>
 
 <script setup>
-import { toRef } from 'vue';
+import { computed, toRef } from 'vue';
+import { useStore } from 'vuex';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import ProductItem from '@/components/ProductItem.vue';
 import { useFetcher } from '@/composables/useFetcher';
@@ -30,5 +31,7 @@ const props = defineProps({
   '@id': { type: String, required: true },
 });
 
-const category = useFetcher(toRef(props, '@id'));
+useFetcher(toRef(props, '@id'));
+const store = useStore();
+const category = computed(() => store.state.category.item);
 </script>

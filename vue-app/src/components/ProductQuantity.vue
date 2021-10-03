@@ -11,10 +11,10 @@
 
 <script setup>
 import { ref, toRefs, computed } from 'vue';
+import { useStore } from 'vuex';
 import { format } from '@/composables/useFormatPrice';
 
 const props = defineProps({
-  product: { type: Object, required: true },
   qtyMax: { type: Number, default: 0 },
 });
 

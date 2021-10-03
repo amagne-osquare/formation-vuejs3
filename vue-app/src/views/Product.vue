@@ -60,6 +60,7 @@
 
 <script setup>
 import { ref, computed, toRef, shallowRef } from 'vue';
+import { useStore } from 'vuex';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import ProductComments from '@/components/ProductComments.vue';
 import ProductDetails from '@/components/ProductDetails.vue';
@@ -71,6 +72,9 @@ import { useFetcher } from '@/composables/useFetcher';
 const props = defineProps({
   '@id': { type: String, required: true },
 });
+
+const store = useStore();
+store.dispatch('fetchProduct', props['@id']);
 
 const activeTab = shallowRef(ProductDetails);
 const qtyMax = ref(0);
