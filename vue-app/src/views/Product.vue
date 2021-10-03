@@ -7,13 +7,7 @@
   </section>
 
   <section class="section" v-if="product">
-    <nav class="breadcrumb" aria-label="breadcrumbs">
-      <ul>
-        <li><router-link :to="{ name: 'homepage' }">Accueil</router-link></li>
-        <li><router-link :to="{ path: product.category['@id'] }">{{ product.category.name }}</router-link></li>
-        <li class="is-active"><a href="#" aria-current="page">{{ product.name }}</a></li>
-      </ul>
-    </nav>
+    <breadcrumbs :parent="product.category" :current="product.name" />
 
     <div class="box columns" id="product">
       <div class="column is-one-third">
@@ -33,61 +27,24 @@
         </div>
 
         <div class="is-flex is-justify-content-space-between is-align-items-baseline">
-          <div
+          <product-variants
             v-if="product.variants.length"
-            class="select is-rounded is-medium is-warning"
-          >
-            <select name="variant" @change="setVariant($event.target.value)">
-              <option>Couleur...</option>
-              <option
-                v-for="variant in product.variants"
-                :key="variant"
-                :value="variant"
-              >{{ variant.value }}</option>
-            </select>
-          </div>
+            :product="product"
+            class="select is-rounded is-medium is-warning"/>
 
-          <div class="is-flex is-align-items-baseline">
-            <p >Quantité : {{ qty }}</p>
-            <div class="buttons ml-2">
-              <button class="button is-danger" @click="decreaseQty">-</button>
-              <button class="button is-success" @click="increaseQty">+</button>
-            </div>
-            <p class="has-text-weight-bold ml-2">Total : {{ total }} €</p>
-          </div>
+          <product-quantity class="is-flex is-align-items-baseline" :product="product" />
         </div>
 
         <div class="tabs is-boxed is-medium">
           <ul>
             <li
-              :class="{ 'is-active': 'details' === activeTab }"
-              @click="activeTab = 'details'"
-            ><a>Détails</a></li>
-            <li
-              v-if="product.comments.length"
-              :class="{ 'is-active': 'comments' === activeTab }"
-              @click="activeTab = 'comments'"
-            ><a>Commentaires</a></li>
+              v-for="tab in tabs" :key="tab.component"
+              :class="{ 'is-active': tab.component === activeTab }"
+              @click="activeTab = tab.component"
+            ><a>{{ tab.label }}</a></li>
           </ul>
         </div>
-        <div class="content" v-if="'details' === activeTab" v-html="product.details" />
-        <div class="content" v-else-if="product.comments.length">
-          <ul>
-            <article
-              v-for="comment in product.comments"
-              :key="comment['@id']"
-              class="message is-dark"
-            >
-              <div class="message-header is-flex">
-                <p>{{ comment.date }}, par {{ comment.author }}</p>
-                <p>({{ comment.note }}/5)</p>
-              </div>
-              <div class="message-body">
-                {{ comment.comment }}
-              </div>
-            </article>
-          </ul>
-        </div>
+        <component class="content" :is="activeTab" :product="product"/>
       </div>
     </div>
   </section>
@@ -95,42 +52,48 @@
 
 <script>
 import { axiosInstance } from '@/api/axios';
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import ProductMixin from '@/mixins/ProductMixin';
+import ProductComments from '@/components/ProductComments.vue';
+import ProductDetails from '@/components/ProductDetails.vue';
+import ProductQuantity from '@/components/ProductQuantity.vue';
+import ProductVariants from '@/components/ProductVariants.vue';
 
 export default {
   data() {
     return {
-      activeTab: 'details',
+      activeTab: 'product-details',
       product: null,
-      qty: 0,
-      variant: null,
     };
   },
   props: {
     '@id': { type: String, required: true },
   },
+  components: {
+    Breadcrumbs,
+    ProductComments,
+    ProductDetails,
+    ProductQuantity,
+    ProductVariants,
+  },
+  mixins: [ProductMixin],
   computed: {
-    total() {
-      return Math.round(this.qty * this.product.price) / 100;
-    },
-  },
-  async created() {
-    this.product = await axiosInstance.get(this['@id']);
-  },
-  methods: {
-    format() {
-      return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(this.product.price / 100);
-    },
-    increaseQty() {
-      this.qty++;
-    },
-    decreaseQty() {
-      if (0 < this.qty) {
-        this.qty--;
+    tabs() {
+      const tabs = [{ label: 'Détails', component: 'product-details' }];
+      if (0 < this.product.comments.length) {
+        tabs.push({ label: 'Commentaires', component: 'product-comments' });
       }
+
+      return tabs;
     },
-    setVariant(value) {
-      this.variant = value;
-    }
+  },
+  watch: {
+    '@id': {
+      async handler() {
+        this.product = await axiosInstance.get(this['@id']);
+      },
+      immediate: true,
+    },
   },
 }
 </script>

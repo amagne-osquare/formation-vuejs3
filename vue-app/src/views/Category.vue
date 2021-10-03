@@ -1,11 +1,6 @@
 <template>
   <div class="section category" v-if="category">
-    <nav class="breadcrumb" aria-label="breadcrumbs">
-      <ul>
-        <li><a href="{{ path('homepage') }}">Homepage</a></li>
-        <li class="is-active"><a href="#" aria-current="page">{{ category.name }}</a></li>
-      </ul>
-    </nav>
+    <breadcrumbs :current="category.name" />
     <h1 class="title">{{ category.name }}</h1>
     <div class="notification is-primary">{{ category.description }}</div>
 
@@ -27,10 +22,12 @@
 
 <script>
 import { axiosInstance } from '@/api/axios';
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import ProductItem from '@/components/ProductItem.vue';
 
 export default {
   components: {
+    Breadcrumbs,
     ProductItem,
   },
   data() {
@@ -41,8 +38,13 @@ export default {
   props: {
     '@id': { type: String, required: true },
   },
-  async created() {
-    this.category = await axiosInstance.get(this['@id']);
+  watch: {
+    '@id': {
+      async handler() {
+        this.category = await axiosInstance.get(this['@id']);
+      },
+      immediate: true,
+    },
   },
 }
 </script>

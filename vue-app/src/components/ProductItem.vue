@@ -44,14 +44,12 @@
 </template>
 
 <script>
+import ProductMixin from '@/mixins/ProductMixin';
+
 export default {
   props: {
     product: { type: Object, required: true },
   },
-  methods: {
-    format(price) {
-      return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price / 100);
-    },
-  }
+  mixins: [ProductMixin],
 }
 </script>

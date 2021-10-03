@@ -81,20 +81,18 @@
                   {{ product.details|nl2br }}
                 </div>
                 {% verbatim %}<div class="content" v-else-if="0 < nbComments">{% endverbatim %}
-                    <ul>
-                        {% for comment in product.comments %}
-                            <article class="message is-dark">
-                                <div class="message-header is-flex">
-                                    <p>{{ comment.date|date("j F Y à H:i") }}, par {{ comment
-                                        .author }}</p>
-                                    <p>({{ comment.note }}/5)</p>
-                                </div>
-                                <div class="message-body">
-                                    {{ comment.comment }}
-                                </div>
-                            </article>
-                        {% endfor %}
-                    </ul>
+                    {% for comment in product.comments %}
+                        <article class="message is-dark">
+                            <div class="message-header is-flex">
+                                <p>{{ comment.date|date("j F Y à H:i") }}, par {{ comment
+                                    .author }}</p>
+                                <p>({{ comment.note }}/5)</p>
+                            </div>
+                            <div class="message-body">
+                                {{ comment.comment }}
+                            </div>
+                        </article>
+                    {% endfor %}
                 </div>
                 {% if product.comments|length > 0 %}
                 {% endif %}
