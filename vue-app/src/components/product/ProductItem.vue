@@ -52,3 +52,9 @@ const props = defineProps({
 });
 const disabled = computed(() => 0 < props.product.variants.length);
 </script>
+
+
+<style lang="scss">
+.product { height: 100% }
+</style>
+

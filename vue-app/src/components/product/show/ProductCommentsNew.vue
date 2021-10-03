@@ -40,18 +40,18 @@
 </template>
 
 <script setup>
-import { axiosInstance } from '@/api/axios';
 import { ref, reactive } from 'vue';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
-const props = defineProps({
-  product: { type: Object, required: true },
-});
+const store = useStore();
 
 const emits = defineEmits(['hide']);
 
-const emptyComment = { comment: '', note: 5, author: '', product: props.product['@id'] };
-let comment = reactive(emptyComment);
 const error = ref(null);
+const product = computed(() => store.state.product.item);
+const emptyComment = { comment: '', note: 5, author: '' };
+let comment = reactive(emptyComment);
 
 const submit = async () => {
   error.value = '';
@@ -61,7 +61,7 @@ const submit = async () => {
   }
 
   try {
-    await axiosInstance.post('/product_comments', comment);
+    await store.dispatch('product/addComment', comment);
     emits('hide');
   } catch (e) {
     error.value = e;

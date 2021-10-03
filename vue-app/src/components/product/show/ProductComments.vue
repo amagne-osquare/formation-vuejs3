@@ -6,7 +6,6 @@
     </button>
     <product-comments-new
       v-show="showForm"
-      :product="product"
       @hide="showForm = false"
     />
     <hr />
@@ -28,11 +27,12 @@
 
 <script setup>
 import { ref } from 'vue';
-import ProductCommentsNew from '@/components/ProductCommentsNew.vue';
+import ProductCommentsNew from '@/components/product/show/ProductCommentsNew.vue';
 
-defineProps({
-  product: { type: Object, required: true },
-});
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
+const store = useStore();
+const product = computed(() => store.state.product.item);
 const showForm = ref(true);
 </script>

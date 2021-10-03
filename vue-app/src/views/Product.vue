@@ -27,18 +27,8 @@
         </div>
 
         <div class="is-flex is-justify-content-space-between is-align-items-baseline">
-          <product-variants
-            v-if="product.variants.length"
-            :product="product"
-            class="select is-rounded is-medium is-warning"
-            @setQtyMax="qtyMax = $event"
-          />
-
-          <product-quantity
-            class="is-flex is-align-items-baseline"
-            :product="product"
-            :qty-max="qtyMax"
-          />
+          <product-variants class="select is-rounded is-medium is-warning" />
+          <product-quantity class="is-flex is-align-items-baseline" />
         </div>
 
         <div class="tabs is-boxed is-medium">
@@ -51,7 +41,7 @@
           </ul>
         </div>
         <keep-alive>
-          <component class="content" :is="activeTab" :product="product"/>
+          <component class="content" :is="activeTab" />
         </keep-alive>
       </div>
     </div>
@@ -59,26 +49,30 @@
 </template>
 
 <script setup>
-import { ref, computed, toRef, shallowRef } from 'vue';
+import { ref, computed, shallowRef, watch } from 'vue';
 import { useStore } from 'vuex';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import ProductComments from '@/components/ProductComments.vue';
-import ProductDetails from '@/components/ProductDetails.vue';
-import ProductQuantity from '@/components/ProductQuantity.vue';
-import ProductVariants from '@/components/ProductVariants.vue';
+import ProductComments from '@/components/product/show/ProductComments.vue';
+import ProductDetails from '@/components/product/show/ProductDetails.vue';
+import ProductQuantity from '@/components/product/show/ProductQuantity.vue';
+import ProductVariants from '@/components/product/show/ProductVariants.vue';
 import { format } from '@/composables/useFormatPrice';
-import { useFetcher } from '@/composables/useFetcher';
 
+const store = useStore();
 const props = defineProps({
   '@id': { type: String, required: true },
 });
+const product = computed(() => store.state.product.item);
 
-const store = useStore();
-store.dispatch('fetchProduct', props['@id']);
+watch(
+  props,
+  () => {
+    store.dispatch('product/fetch', props['@id']);
+  },
+  { immediate: true },
+);
 
 const activeTab = shallowRef(ProductDetails);
-const qtyMax = ref(0);
-const product = useFetcher(toRef(props, '@id'));
 
 const tabs = computed(() => {
   const tabs = [{ label: 'Détails', component: ProductDetails }];

@@ -59,6 +59,7 @@ class Product
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductComment::class, orphanRemoval: true)]
     #[Groups('product:get')]
+    #[ORM\OrderBy(['date' => 'DESC'])]
     private Collection $comments;
 
     public function __construct()

@@ -21,17 +21,22 @@
 </template>
 
 <script setup>
-import { computed, toRef } from 'vue';
+import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import ProductItem from '@/components/ProductItem.vue';
-import { useFetcher } from '@/composables/useFetcher';
+import ProductItem from '@/components/product/ProductItem.vue';
 
+const store = useStore();
 const props = defineProps({
   '@id': { type: String, required: true },
 });
-
-useFetcher(toRef(props, '@id'));
-const store = useStore();
 const category = computed(() => store.state.category.item);
+
+watch(
+  props,
+  () => {
+    store.dispatch('category/fetch', props['@id']);
+  },
+  { immediate: true },
+);
 </script>
